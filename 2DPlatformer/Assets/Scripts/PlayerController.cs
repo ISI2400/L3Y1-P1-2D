@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public float timer;
 
     [Header("Health")]
+
+    public Slider delayedslider;
     public Slider healthSlider;
     public int maxHealth;
     public int currentHealth;
@@ -22,6 +24,8 @@ public class PlayerController : MonoBehaviour
     bool isFacingRight;
 
     [Header("Main")]
+
+    public int jumps;
     public float moveSpeed;
     public float jumpForce;
     float inputs;
@@ -36,11 +40,16 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        delayedslider.maxValue = maxHealth;
+
         healthSlider.maxValue = maxHealth;
         startPos = transform.position;
 
+        
         currentHealth = maxHealth;
         isFacingRight = true;
+
+        delayedslider.value = currentHealth;
         
     }
 
@@ -54,6 +63,7 @@ public class PlayerController : MonoBehaviour
         Health();
         Shoot();
         MovementDirection();
+        Jump();
   
     }
 
@@ -67,10 +77,16 @@ public class PlayerController : MonoBehaviour
 
         if (hit.collider)
         {
-            if (Input.GetButtonDown("Jump"))
-            {
-                rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
-            }
+            jumps = 2;
+        }
+    }
+
+    void Jump(){
+
+        if (Input.GetButtonDown("Jump") && jumps > 0)
+        {
+            jumps =- 1;
+             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 
@@ -79,6 +95,12 @@ public class PlayerController : MonoBehaviour
         if (currentHealth <= 0){
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    IEnumerator Healthbardelay(){
+        yield return new WaitForSeconds(.5f);
+        Debug.Log("delayover");
+        delayedslider.value = currentHealth;
     }
 
     void Shoot(){
@@ -117,6 +139,7 @@ public class PlayerController : MonoBehaviour
         {
             currentHealth--;
             Destroy(other.gameObject);
+            StartCoroutine(Healthbardelay());
         }
     }
 }
