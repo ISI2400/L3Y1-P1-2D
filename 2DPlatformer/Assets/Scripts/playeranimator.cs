@@ -7,6 +7,7 @@ public class playeranimator : MonoBehaviour
 
     public Animation anim;
 
+
     void Update(){
 
         if (anim.isPlaying){

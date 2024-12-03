@@ -86,7 +86,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && jumps > 0)
         {
             jumps =- 1;
-             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+            rb.velocity = new Vector2(0f, 0f);
+            rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 
